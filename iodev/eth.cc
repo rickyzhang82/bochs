@@ -60,6 +60,7 @@ extern class bx_fbsd_locator_c bx_fbsd_match;
 #endif
 #ifdef ETH_LINUX
 extern class bx_linux_locator_c bx_linux_match;
+extern class bx_sn_locator_c bx_sn_match;
 #endif
 #ifdef ETH_WIN32
 extern class bx_win32_locator_c bx_win32_match;
