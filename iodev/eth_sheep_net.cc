@@ -149,13 +149,13 @@ bx_sn_pktmover_c::bx_sn_pktmover_c(const char *netif,
 void
 bx_sn_pktmover_c::sendpkt(void *buf, unsigned io_len)
 {
-  int status;
+  if (this->fd == -1)
+    return;
 
-  if (this->fd != -1) {
-    status = write(this->fd, buf, io_len);
-    if (status == -1)
-      BX_INFO(("eth_sheep_net: write failed: %s", strerror(errno)));
-  }
+  BX_INFO(("eth_sheep_net: writing to sheep_net %n bytes data.", io_len));
+  int status = write(this->fd, buf, io_len);
+  if (status == -1)
+    BX_INFO(("eth_linux: write failed: %s", strerror(errno)));
 }
 
 // The receive poll process
@@ -170,32 +170,21 @@ bx_sn_pktmover_c::rx_timer_handler(void *this_ptr)
 void
 bx_sn_pktmover_c::rx_timer(void)
 {
-  int nbytes = 0;
-  Bit8u rxbuf[BX_PACKET_BUFSIZ];
-  struct sockaddr_ll sll;
-  socklen_t fromlen;
-//static unsigned char bcast_addr[6] = {0xff,0xff,0xff,0xff,0xff,0xff};
-
   if (this->fd == -1)
     return;
 
-  fromlen = sizeof(sll);
-  nbytes = recvfrom(this->fd, rxbuf, sizeof(rxbuf), 0, (struct sockaddr *)&sll, &fromlen);
+  int nbytes = 0;
+  Bit8u rxbuf[BX_PACKET_BUFSIZ];
+  nbytes = read(this->fd, rxbuf, 1514);
 
   if (nbytes == -1) {
     if (errno != EAGAIN)
-      BX_INFO(("eth_sheep_net: error receiving packet: %s\n", strerror(errno)));
+      BX_INFO(("eth_linux: error receiving packet: %s\n", strerror(errno)));
     return;
   }
 
-  // this should be done with LSF someday
-  // filter out packets sourced by us
-  if (memcmp(sll.sll_addr, this->linux_macaddr, 6) == 0)
-    return;
   // let through broadcast, multicast, and our mac address
-//  if ((memcmp(rxbuf, bcast_addr, 6) == 0) || (memcmp(rxbuf, this->linux_macaddr, 6) == 0) || rxbuf[0] & 0x01) {
-    BX_DEBUG(("eth_sheep_net: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x\n", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
-    (*rxh)(rxarg, rxbuf, nbytes);
-//  }
+  BX_INFO(("eth_linux: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x\n", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
+  (*rxh)(rxarg, rxbuf, nbytes);
 }
 #endif /* if BX_NE2K_SUPPORT && defined ETH_LINUX */
