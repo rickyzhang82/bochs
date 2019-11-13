@@ -27,7 +27,7 @@
 // Peter Grehan (grehan@iprg.nokia.com) coded all of this
 // NE2000/ether stuff.
 
-// eth_linux.cc - A Linux socket filter adaptation of the FreeBSD BPF driver
+// eth_sheep_net.cc - A Linux socket filter adaptation of the FreeBSD BPF driver
 // <splite@purdue.edu> 21 June 2001
 //
 // Problems and limitations:
@@ -138,7 +138,7 @@ bx_sn_pktmover_c::bx_sn_pktmover_c(const char *netif,
 
   this->rx_timer_index =
     bx_pc_system.register_timer(this, this->rx_timer_handler, BX_PACKET_POLL,
-        1, 1, "eth_linux"); // continuous, active
+        1, 1, "eth_sheep_net"); // continuous, active
 
   this->rxh   = rxh;
   this->rxarg = rxarg;
@@ -155,7 +155,7 @@ bx_sn_pktmover_c::sendpkt(void *buf, unsigned io_len)
   BX_INFO(("eth_sheep_net: writing to sheep_net %n bytes data.", io_len));
   int status = write(this->fd, buf, io_len);
   if (status == -1)
-    BX_INFO(("eth_linux: write failed: %s", strerror(errno)));
+    BX_INFO(("eth_sheep_net: write failed: %s", strerror(errno)));
 }
 
 // The receive poll process
@@ -179,12 +179,12 @@ bx_sn_pktmover_c::rx_timer(void)
 
   if (nbytes == -1) {
     if (errno != EAGAIN)
-      BX_INFO(("eth_linux: error receiving packet: %s\n", strerror(errno)));
+      BX_INFO(("eth_sheep_net: error receiving packet: %s\n", strerror(errno)));
     return;
   }
 
   // let through broadcast, multicast, and our mac address
-  BX_INFO(("eth_linux: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x\n", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
+  BX_INFO(("eth_sheep_net: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x\n", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
   (*rxh)(rxarg, rxbuf, nbytes);
 }
 #endif /* if BX_NE2K_SUPPORT && defined ETH_LINUX */
