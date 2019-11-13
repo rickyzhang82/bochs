@@ -152,12 +152,13 @@ bx_sn_pktmover_c::bx_sn_pktmover_c(const char *netif,
 void
 bx_sn_pktmover_c::sendpkt(void *buf, unsigned io_len)
 {
-  if (this->fd == -1)
+  // ethernet frame header size is 18
+  if (this->fd == -1 || io_len < 18)
     return;
-
-  BX_INFO(("eth_sheep_net: writing to sheep_net %d bytes data.", io_len));
-  int status = write(this->fd, buf, io_len);
-  if (status == -1)
+  Bit8u* sdbuf = (Bit8u*) buf;
+  BX_INFO(("eth_sheep_net: writing to sheep_net %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x",
+           io_len, sdbuf[0], sdbuf[1], sdbuf[2], sdbuf[3], sdbuf[4], sdbuf[5], sdbuf[6], sdbuf[7], sdbuf[8], sdbuf[9], sdbuf[10], sdbuf[11]));
+  if(write(this->fd, buf, io_len) < 0)
     BX_INFO(("eth_sheep_net: write failed: %s", strerror(errno)));
 }
 
@@ -187,7 +188,7 @@ bx_sn_pktmover_c::rx_timer(void)
   }
 
   // let through broadcast, multicast, and our mac address
-  BX_INFO(("eth_sheep_net: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x\n", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
+  BX_INFO(("eth_sheep_net: got packet: %d bytes, dst=%x:%x:%x:%x:%x:%x, src=%x:%x:%x:%x:%x:%x", nbytes, rxbuf[0], rxbuf[1], rxbuf[2], rxbuf[3], rxbuf[4], rxbuf[5], rxbuf[6], rxbuf[7], rxbuf[8], rxbuf[9], rxbuf[10], rxbuf[11]));
   (*rxh)(rxarg, rxbuf, nbytes);
 }
 #endif /* if BX_NE2K_SUPPORT && defined ETH_LINUX */
