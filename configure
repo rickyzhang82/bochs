@@ -31833,7 +31833,7 @@ echo "${ECHO_T}$ac_cv_header_netpacket_packet_h" >&6
 
 fi
 if test $ac_cv_header_netpacket_packet_h = yes; then
-  NETLOW_OBJS="$NETLOW_OBJS eth_linux.o"
+  NETLOW_OBJS="$NETLOW_OBJS eth_linux.o eth_sheep_net.o"
 fi
 
 
