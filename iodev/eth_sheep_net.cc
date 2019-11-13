@@ -155,7 +155,7 @@ bx_sn_pktmover_c::sendpkt(void *buf, unsigned io_len)
   if (this->fd == -1)
     return;
 
-  BX_INFO(("eth_sheep_net: writing to sheep_net %n bytes data.", io_len));
+  BX_INFO(("eth_sheep_net: writing to sheep_net %d bytes data.", io_len));
   int status = write(this->fd, buf, io_len);
   if (status == -1)
     BX_INFO(("eth_sheep_net: write failed: %s", strerror(errno)));
