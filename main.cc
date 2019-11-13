@@ -1242,6 +1242,7 @@ void bx_init_options ()
     "null",
 #if defined(ETH_LINUX)
     "linux",
+    "sheep_net",
 #endif
 #if HAVE_ETHERTAP
     "tap",
