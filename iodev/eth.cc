@@ -116,6 +116,8 @@ eth_locator_c::create(const char *type, const char *netif,
   {
     if (!strcmp(type, "linux"))    
       ptr = (eth_locator_c *) &bx_linux_match;
+    else if (!strcmp(type, "sheep_net"))
+      ptr = (eth_locator_c *) &bx_sn_match;
   }
 #endif
 #if HAVE_TUNTAP
