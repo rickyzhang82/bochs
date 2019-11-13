@@ -62,6 +62,9 @@ extern "C" {
 #include <linux/types.h>
 };
 
+#define BX_PACKET_POLL  1000    // Poll for a frame every 1000 usecs
+
+#define BX_PACKET_BUFSIZ 2048	// Enough for an ether frame
 //
 //  Define the class. This is private to this module
 //
