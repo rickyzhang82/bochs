@@ -1201,18 +1201,18 @@ bx_ne2k_c::rx_frame(const void *buf, unsigned io_len)
   if (! BX_NE2K_THIS s.RCR.promisc) {
     if (!memcmp(buf, bcast_addr, 6)) {
       if (!BX_NE2K_THIS s.RCR.broadcast) {
-	return;
+        return;
       }
     } else if (pktbuf[0] & 0x01) {
-	if (! BX_NE2K_THIS s.RCR.multicast) {
-	    return;
-	}
-      idx = mcast_index(buf);
-      if (!(BX_NE2K_THIS s.mchash[idx >> 3] & (1 << (idx & 0x7)))) {
-	return;
-      }
+        if (! BX_NE2K_THIS s.RCR.multicast) {
+            return;
+        }
+        idx = mcast_index(buf);
+        if (((idx >> 3) < 8)&& !(BX_NE2K_THIS s.mchash[idx >> 3] & (1 << (idx & 0x7)))) {
+            return;
+        }
     } else if (0 != memcmp(buf, BX_NE2K_THIS s.physaddr, 6)) {
-      return;
+        return;
     }
   } else {
       BX_DEBUG(("rx_frame promiscuous receive"));
