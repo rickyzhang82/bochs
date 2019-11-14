@@ -139,6 +139,12 @@ bx_sn_pktmover_c::bx_sn_pktmover_c(const char *netif,
     return;
   }
 
+  if(ioctl(this->fd, SIOCSIFADDR, this->linux_macaddr) < 0) {
+	 BX_PANIC(("eth_sheep_net: Failed to set MAC address %s to sheep_net: %s", this->linux_macaddr, strerror(errno)));
+	 this->fd = -1;
+	 return;
+  }
+
   this->rx_timer_index =
     bx_pc_system.register_timer(this, this->rx_timer_handler, BX_PACKET_POLL,
         1, 1, "eth_sheep_net"); // continuous, active
