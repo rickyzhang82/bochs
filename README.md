@@ -1,6 +1,8 @@
 Bochs 2.11 for Minix 2.0.0
 ==========================
 
+[![Build Status](https://api.cirrus-ci.com/github/rickyzhang82/bochs.svg)](https://cirrus-ci.com/github/rickyzhang82/bochs.svg)
+
 This is the last known version of Bochs to me that I can run [Minix 2.0.0](http://download.minix3.org/previous-versions/Intel-2.0.0/) with TCP/IP networking. In my junior college year, I read Andrew Tanebaum's book `Operating Systems: Design and Implementation (Second Edition)` and did some lab work in Minix 2.0.0.
 
 Recent version Bochs discontinues support for level 3 Intel CPU a.k.a i386. Thus, you can not run Minix 2.0.0 in the latest Bochs. For sure, I have no trouble to run Minix without networking in the latest QEMU due to the absence of N2k ethernet card emulation. So I forked Bochs 2.11 for those who want to have fun with Minix 2.0.0.
