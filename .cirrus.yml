@@ -1,0 +1,12 @@
+container:
+  image: fedora:latest
+
+task:
+  name: Test Fedora
+  install_script: dnf groupinstall -y "Development Tools"; dnf install -y gcc-c++ libstdc++ libxmp-devel libX11-devel libXt-devel findutils
+  configure_script:
+    - ./configure --with-x --with-X11 --enable-all-optimizations --enable-idle-hack --enable-readline --enable-plugins --enable-cpu-level=3 --enable-fpu --enable-fast-function-calls --enable-cpp --enable-iodebug --enable-x86-debugger --enable-ne2000 --disable-mmx
+
+  build_script:
+    - make all
+    - make install
