@@ -187,3 +187,28 @@ save
 
 This took me a while to figure out why N2k card is in sink mode. See [monitor doc here](https://minix1.woodhull.com/current/2.0.4/wwwman/man8/monitor.8.html).
 
+
+### Patch dp8390 chip driver
+
+```C
+--- /home/Ricky/Bochs-workspace/minix-2.0.0/pkg/Intel-2.0.0/src/src/kernel/dp8390.c	1996-10-01 08:00:00.000000000 -0400
++++ src/kernel/dp8390.c	2019-11-14 09:55:50.000000000 -0500
+@@ -341,7 +341,7 @@
+ 		outb_reg0(dep, DP_TPSR, dep->de_sendq[sendq_head].sq_sendpage);
+ 		outb_reg0(dep, DP_TBCR1, size >> 8);
+ 		outb_reg0(dep, DP_TBCR0, size & 0xff);
+-		outb_reg0(dep, DP_CR, CR_TXP);	/* there it goes.. */
++		outb_reg0(dep, DP_CR, CR_TXP|CR_STA);	/* there it goes.. */
+ 	}
+ 	else
+ 		dep->de_sendq[sendq_head].sq_size= size;
+@@ -838,7 +838,7 @@
+ 					dep->de_sendq[sendq_tail].sq_sendpage);
+ 				outb_reg0(dep, DP_TBCR1, size >> 8);
+ 				outb_reg0(dep, DP_TBCR0, size & 0xff);
+-				outb_reg0(dep, DP_CR, CR_TXP);	/* there is goes.. */
++				outb_reg0(dep, DP_CR, CR_TXP|CR_STA);	/* there is goes.. */
+ 			}
+ 			if (dep->de_flags & DEF_SEND_AVAIL)
+ 				dp_send(dep);
+```
