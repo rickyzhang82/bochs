@@ -1,7 +1,7 @@
 Forked Bochs 2.11 for Minix 2.0.0
 =================================
 
-[![Build Status](https://api.cirrus-ci.com/github/rickyzhang82/bochs.svg)](https://cirrus-ci.com/github/rickyzhang82/bochs.svg)
+[![Build Status](https://api.cirrus-ci.com/github/rickyzhang82/bochs.svg)](https://cirrus-ci.com/github/rickyzhang82/bochs)
 
 Bochs 2.11 is the last known version of Bochs to me that I could run [Minix 2.0.0](http://download.minix3.org/previous-versions/Intel-2.0.0/) with TCP/IP networking. In my junior college year, I read Andrew Tanebaum's book `Operating Systems: Design and Implementation (Second Edition)` and did some OS lab work in Minix 2.0.0.
 
