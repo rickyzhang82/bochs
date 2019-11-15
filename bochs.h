@@ -50,6 +50,7 @@ extern "C" {
 #include <stdlib.h>
 #include <assert.h>
 #include <errno.h>
+#include <stdint.h>
 
 #ifndef WIN32
 #  include <unistd.h>

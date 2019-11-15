@@ -1107,7 +1107,7 @@ unsigned
 bx_ne2k_c::mcast_index(const void *dst)
 {
 #define POLYNOMIAL 0x04c11db6
-  unsigned long crc = 0xffffffffL;
+  uint32_t crc = 0xffffffffL;
   int carry, i, j;
   unsigned char b;
   unsigned char *ep = (unsigned char *) dst;
@@ -1119,7 +1119,7 @@ bx_ne2k_c::mcast_index(const void *dst)
       crc <<= 1;
       b >>= 1;
       if (carry)
-	crc = ((crc ^ POLYNOMIAL) | carry);
+        crc = ((crc ^ POLYNOMIAL) | carry);
     }
   }
   return (crc >> 26);
@@ -1208,7 +1208,7 @@ bx_ne2k_c::rx_frame(const void *buf, unsigned io_len)
             return;
         }
         idx = mcast_index(buf);
-        if (((idx >> 3) < 8)&& !(BX_NE2K_THIS s.mchash[idx >> 3] & (1 << (idx & 0x7)))) {
+        if (!(BX_NE2K_THIS s.mchash[idx >> 3] & (1 << (idx & 0x7)))) {
             return;
         }
     } else if (0 != memcmp(buf, BX_NE2K_THIS s.physaddr, 6)) {
